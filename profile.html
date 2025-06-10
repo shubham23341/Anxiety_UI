@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile - Anxiety Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(120deg, #e0f7fa, #fce4ec);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: linear-gradient(90deg, #43cea2, #185a9d);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      height: 60px;
+      color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .navbar .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      padding: 10px 15px;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      animation: fadeInSlide 0.8s ease-in-out;
+    }
+
+    @keyframes fadeInSlide {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #2c3e50;
+      font-size: 28px;
+      font-weight: 600;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    form {
+      display: grid;
+      gap: 20px;
+    }
+
+    .form-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      background-color: #f9f9f9;
+      transition: border 0.2s ease-in-out;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    button {
+      grid-column: span 2;
+      padding: 12px;
+      background: linear-gradient(to right, #4CAF50, #66bb6a);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #388e3c, #4caf50);
+      transform: scale(1.02);
+    }
+
+    .form-group strong {
+      font-weight: 600;
+    }
+
+    .success-message-container {
+      background-color: #e8f5e9;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      margin: 30px auto;
+      display: none;
+      max-width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .success-icon {
+      color: #4CAF50;
+      font-size: 80px;
+      margin-bottom: 20px;
+    }
+
+    .success-text {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .success-subtext {
+      font-size: 16px;
+      color: #555;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">Anxiety App</div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="logout.html">Logout</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>User Profile</h2>
+    <form id="profileForm">
+      <div id="formFields" class="form-section">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullName" required />
+        </div>
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input type="number" id="age" name="age" required />
+        </div>
+        <div class="form-group">
+          <label for="weight">Weight (kg)</label>
+          <input type="number" id="weight" name="weight" required />
+        </div>
+        <div class="form-group">
+          <label for="height">Height (cm)</label>
+          <input type="number" id="height" name="height" required />
+        </div>
+        <div class="form-group">
+          <label for="dob">Date of Birth</label>
+          <input type="date" id="dob" name="dob" required />
+        </div>
+        <div class="form-group">
+          <label for="mobile">Mobile Number</label>
+          <input type="tel" id="mobile" name="mobile" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select id="gender" name="gender" required>
+            <option value="" disabled selected>Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group full-width">
+          <label for="address">Address</label>
+          <textarea id="address" name="address" rows="3" required></textarea>
+        </div>
+        <button type="submit" id="saveBtn">💾 Save Profile</button>
+      </div>
+
+      <div id="viewFields" class="form-section" style="display: none;">
+        <div class="form-group full-width"><strong>Full Name:</strong> <span id="view_fullName"></span></div>
+        <div class="form-group"><strong>Age:</strong> <span id="view_age"></span></div>
+        <div class="form-group"><strong>Weight:</strong> <span id="view_weight"></span> kg</div>
+        <div class="form-group"><strong>Height:</strong> <span id="view_height"></span> cm</div>
+        <div class="form-group"><strong>Date of Birth:</strong> <span id="view_dob"></span></div>
+        <div class="form-group"><strong>Mobile:</strong> <span id="view_mobile"></span></div>
+        <div class="form-group"><strong>Email:</strong> <span id="view_email"></span></div>
+        <div class="form-group"><strong>Gender:</strong> <span id="view_gender"></span></div>
+        <div class="form-group full-width"><strong>Address:</strong> <span id="view_address"></span></div>
+        <button type="button" id="updateBtn">✏️ Update Profile</button>
+      </div>
+    </form>
+
+    <div id="profileSaveSuccess" class="success-message-container">
+      <div class="success-icon">&#10003;</div>
+      <div class="success-text">Profile Saved!</div>
+      <div class="success-subtext">Your profile information has been updated successfully.</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDU2fhSZJXpSyId90Lsy7Xibh8aOO4xLQw",
+      authDomain: "anxiety-686d3.firebaseapp.com",
+      projectId: "anxiety-686d3",
+      storageBucket: "anxiety-686d3.appspot.com",
+      messagingSenderId: "587573078889",
+      appId: "1:587573078889:web:d15c708426bcfe7f79ebf8",
+      measurementId: "G-3KZGT2SQSZ",
+      databaseURL: "https://anxiety-686d3-default-rtdb.firebaseio.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    const form = document.getElementById("profileForm");
+    const formFields = document.getElementById("formFields");
+    const viewFields = document.getElementById("viewFields");
+    const updateBtn = document.getElementById("updateBtn");
+    const profileSaveSuccessDiv = document.getElementById("profileSaveSuccess");
+
+    function toggleMode(mode, data = {}) {
+      if (mode === "view") {
+        formFields.style.display = "none";
+        viewFields.style.display = "grid";
+        for (const key in data) {
+          const viewEl = document.getElementById("view_" + key);
+          if (viewEl) viewEl.textContent = data[key];
+        }
+      } else {
+        formFields.style.display = "grid";
+        viewFields.style.display = "none";
+        profileSaveSuccessDiv.style.display = "none";
+      }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      currentUser = user;
+      const docRef = doc(db, "profiles", user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        for (const key in data) {
+          const input = document.getElementById(key);
+          if (input) input.value = data[key];
+        }
+        toggleMode("view", data);
+      } else {
+        toggleMode("edit");
+      }
+    });
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const profileData = Object.fromEntries(formData.entries());
+
+      if (currentUser) {
+        try {
+          await setDoc(doc(db, "profiles", currentUser.uid), profileData);
+          profileSaveSuccessDiv.style.display = "block";
+          formFields.style.display = "none";
+          viewFields.style.display = "none";
+
+          setTimeout(() => {
+            profileSaveSuccessDiv.style.display = "none";
+            toggleMode("view", profileData);
+          }, 3000);
+        } catch (error) {
+          console.error("Error saving profile:", error);
+          alert("Failed to save profile: " + error.message);
+          formFields.style.display = "grid";
+          viewFields.style.display = "none";
+          profileSaveSuccessDiv.style.display = "none";
+        }
+      }
+    });
+
+    updateBtn.addEventListener("click", () => {
+      toggleMode("edit");
+    });
+  </script>
+</body>
+</html>
