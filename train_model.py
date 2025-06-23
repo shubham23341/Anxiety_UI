@@ -1,26 +1,22 @@
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
 import joblib
 
-# Load your dataset
+# Load data
 data = pd.read_csv("data_stress1.csv")
+data.columns = data.columns.str.strip()  # Remove accidental spaces
 
-# Print columns to confirm actual names
-print("Available columns:", data.columns)
+# Print to confirm
+print("✅ Available columns:", data.columns.tolist())
 
-# Define features and label — make sure these column names match your CSV exactly
-X = data[['respiration rate', 'body temperature', 'limb movement', 'blood oxygen ', 'heart rate ', 'Stress Levels']]
-y = data['Stress Levels']  # Adjust this if your label column is named differently
+# Use the corrected column names
+X = data[['heart rate', 'body temperature', 'blood oxygen', 'limb movement', 'respiration rate']]
+y = data['Stress Levels']
 
-# Split the data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Train model
+model = RandomForestRegressor()
+model.fit(X, y)
 
-# Train the model
-model = RandomForestClassifier()
-model.fit(X_train, y_train)
-
-# Save the model
+# Save model
 joblib.dump(model, 'model.pkl')
-
-print("✅ Model training complete and saved as model.pkl")
+print("✅ Model trained and saved as model.pkl")

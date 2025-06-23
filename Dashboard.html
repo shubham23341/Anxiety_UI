@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Anxiety Detection Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
@@ -100,14 +100,11 @@
       transform: scale(1.03);
     }
 
-    #predictionResult, #anxietyTips {
+    #predictionResult {
       grid-column: span 2;
       padding: 14px;
       border-radius: 8px;
       font-size: 16px;
-    }
-
-    #predictionResult {
       background-color: #e3f2fd;
       border: 1px solid #90caf9;
       color: #0d47a1;
@@ -115,13 +112,14 @@
     }
 
     #anxietyTips {
-      margin-top: 10px;
-      background-color: #fff8e1;
-      border: 1px solid #ffb74d;
-      color: #e65100;
+      grid-column: span 2;
       display: none;
+      background-color: #fffde7;
+      border-left: 4px solid #fbc02d;
+      padding: 14px;
+      border-radius: 8px;
       font-size: 15px;
-      line-height: 1.6;
+      color: #795548;
     }
 
     .data-box {
@@ -143,262 +141,168 @@
         grid-template-columns: 1fr;
       }
     }
-
-    .success-message-container {
-      background-color: #e8f5e9;
-      border-radius: 12px;
-      padding: 30px;
-      text-align: center;
-      margin: 30px auto;
-      display: none;
-      max-width: 450px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .success-icon {
-      color: #4CAF50;
-      font-size: 80px;
-      margin-bottom: 15px;
-    }
-
-    .success-text {
-      font-size: 24px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 10px;
-    }
-
-    .success-subtext {
-      font-size: 16px;
-      color: #555;
-    }
   </style>
 </head>
 <body>
-
-<div class="navbar">
-  <div class="logo">Anxiety App</div>
-  <div class="nav-links">
-    <a href="#">Home</a>
-    <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="logout.html">Logout</a>
-  </div>
-</div>
-
-<div class="container">
-  <h2>Your Live Sensor Data</h2>
-
-  <form id="sensorForm">
-    <label>Heart Rate (bpm): <input type="number" id="heartRate" required /></label>
-    <label>SpO₂ (%): <input type="number" id="spo2" required /></label>
-    <label>Temperature (°C): <input type="number" step="0.1" id="temperature" required /></label>
-    <label>Limb Movement: <input type="number" id="limbMovement" required /></label>
-    <label>Stress Level (1-10): <input type="number" min="1" max="10" id="stressLevel" required /></label>
-    <button type="submit">Submit & Predict</button>
-    <div id="predictionResult"></div>
-    <div id="anxietyTips"></div>
-  </form>
-
-  <div id="notificationSuccess" class="success-message-container">
-    <div class="success-icon">&#10003;</div>
-    <div class="success-text">Notification Sent!</div>
-    <div class="success-subtext">Tips based on your anxiety level have been sent to your phone.</div>
+  <div class="navbar">
+    <div class="logo">Anxiety App</div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="logout.html">Logout</a>
+    </div>
   </div>
 
-  <div class="data-box" id="dashboardContent">Loading data...</div>
+  <div class="container">
+    <h2>Your Live Sensor Data</h2>
 
-  <h3 style="text-align:center; margin-top:40px; color:#333;">Your Weekly Health Trends</h3>
-  <canvas id="weeklyHeartChart" height="100"></canvas>
-  <canvas id="weeklySpO2Chart" height="100"></canvas>
-  <canvas id="weeklyTempChart" height="100"></canvas>
-</div>
+    <form id="sensorForm">
+      <label>Heart Rate (bpm): <input type="number" id="heartRate" required /></label>
+      <label>SpO₂ (%): <input type="number" id="spo2" required /></label>
+      <label>Temperature (°C): <input type="number" step="0.1" id="temperature" required /></label>
+      <label>Limb Movement: <input type="number" id="limbMovement" required /></label>
+      <label>Respiration Rate (breaths/min): <input type="number" id="respirationRate" required /></label>
+      <button type="submit">Submit & Predict</button>
+      <div id="predictionResult"></div>
+      <div id="anxietyTips"></div>
+    </form>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-  import {
-    getFirestore, doc, getDoc, collection, query, where, getDocs,
-    addDoc, serverTimestamp, Timestamp
-  } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+    <div class="data-box" id="dashboardContent">Loading data...</div>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDU2fhSZJXpSyId90Lsy7Xibh8aOO4xLQw",
-    authDomain: "anxiety-686d3.firebaseapp.com",
-    projectId: "anxiety-686d3",
-    storageBucket: "anxiety-686d3.appspot.com",
-    messagingSenderId: "587573078889",
-    appId: "1:587573078889:web:d15c708426bcfe7f79ebf8",
-    measurementId: "G-3KZGT2SQSZ",
-    databaseURL: "https://anxiety-686d3-default-rtdb.firebaseio.com"
-  };
+    <h3 style="text-align:center; margin-top:40px; color:#333;">Your Weekly Health Trends</h3>
+    <canvas id="weeklyHeartChart" height="100"></canvas>
+    <canvas id="weeklySpO2Chart" height="100"></canvas>
+    <canvas id="weeklyTempChart" height="100"></canvas>
+  </div>
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  let currentUser;
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+    import {
+      getFirestore, doc, getDoc, collection, addDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) return window.location.href = "login.html";
-    currentUser = user;
-
-    const dashboardRef = doc(db, "dashboardData", user.uid);
-    const dashboardSnap = await getDoc(dashboardRef);
-    const dashboardContent = document.getElementById("dashboardContent");
-
-    if (dashboardSnap.exists()) {
-      const data = dashboardSnap.data();
-      dashboardContent.innerHTML = `
-        <strong>Heart Rate:</strong> ${data.heartRate} bpm<br>
-        <strong>SpO₂:</strong> ${data.spO2}%<br>
-        <strong>Temperature:</strong> ${data.temperature} °C<br>
-        <strong>Limb Movement:</strong> ${data.limbMovement}<br>
-        <strong>Anxiety Level:</strong> ${data.anxietyLevel}
-      `;
-    }
-
-    const oneWeekAgo = Timestamp.fromDate(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
-    const logsQuery = query(collection(db, "weeklyLogs"), where("uid", "==", user.uid), where("timestamp", ">", oneWeekAgo));
-    const logsSnap = await getDocs(logsQuery);
-
-    const dailyMap = {};
-    logsSnap.forEach(doc => {
-      const d = doc.data();
-      const date = d.timestamp.toDate().toLocaleDateString();
-
-      if (!dailyMap[date]) {
-        dailyMap[date] = { heartRates: [], spO2s: [], temps: [] };
-      }
-
-      dailyMap[date].heartRates.push(d.heartRate);
-      dailyMap[date].spO2s.push(d.spO2);
-      dailyMap[date].temps.push(d.temperature);
-    });
-
-    const today = new Date();
-    const dateLabels = [];
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(today.getDate() - i);
-      dateLabels.push(date.toLocaleDateString());
-    }
-
-    const heartData = [], spO2Data = [], tempData = [];
-    dateLabels.forEach(date => {
-      const dayData = dailyMap[date];
-      if (dayData) {
-        const avg = arr => arr.reduce((sum, v) => sum + v, 0) / arr.length;
-        heartData.push(Math.round(avg(dayData.heartRates)));
-        spO2Data.push(Math.round(avg(dayData.spO2s)));
-        tempData.push(avg(dayData.temps).toFixed(1));
-      } else {
-        heartData.push(null);
-        spO2Data.push(null);
-        tempData.push(null);
-      }
-    });
-
-    const chartOptions = { type: 'line', options: { responsive: true, scales: { y: { beginAtZero: true } } } };
-
-    new Chart(document.getElementById("weeklyHeartChart"), {
-      ...chartOptions,
-      data: { labels: dateLabels, datasets: [{ label: "Heart Rate", data: heartData, borderColor: "#4CAF50", fill: false }] }
-    });
-    new Chart(document.getElementById("weeklySpO2Chart"), {
-      ...chartOptions,
-      data: { labels: dateLabels, datasets: [{ label: "SpO₂ (%)", data: spO2Data, borderColor: "#2196F3", fill: false }] }
-    });
-    new Chart(document.getElementById("weeklyTempChart"), {
-      ...chartOptions,
-      data: { labels: dateLabels, datasets: [{ label: "Temperature (°C)", data: tempData, borderColor: "#FFC107", fill: false }] }
-    });
-  });
-
-  document.getElementById("sensorForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const data = {
-      heartRate: Number(document.getElementById("heartRate").value),
-      spo2: Number(document.getElementById("spo2").value),
-      temperature: Number(document.getElementById("temperature").value),
-      limbMovement: Number(document.getElementById("limbMovement").value),
-      stressLevel: Number(document.getElementById("stressLevel").value),
-      uid: currentUser?.uid || "test-user"
+    const firebaseConfig = {
+      apiKey: "AIzaSyDU2fhSZJXpSyId90Lsy7Xibh8aOO4xLQw",
+      authDomain: "anxiety-686d3.firebaseapp.com",
+      projectId: "anxiety-686d3",
+      storageBucket: "anxiety-686d3.appspot.com",
+      messagingSenderId: "587573078889",
+      appId: "1:587573078889:web:d15c708426bcfe7f79ebf8",
+      measurementId: "G-3KZGT2SQSZ",
+      databaseURL: "https://anxiety-686d3-default-rtdb.firebaseio.com"
     };
 
-    try {
-      const response = await fetch("http://localhost:5000/predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let currentUser;
 
-      const result = await response.json();
-      const predictionDiv = document.getElementById("predictionResult");
-      const tipsDiv = document.getElementById("anxietyTips");
-      const notificationSuccessDiv = document.getElementById("notificationSuccess");
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return window.location.href = "login.html";
+      currentUser = user;
 
-      predictionDiv.textContent = `Anxiety Status: ${result.anxietyStatus || "Unknown"} (${result.anxietyLevel || "N/A"})`;
+      const dashboardRef = doc(db, "dashboardData", user.uid);
+      const dashboardSnap = await getDoc(dashboardRef);
+      const dashboardContent = document.getElementById("dashboardContent");
 
-      await addDoc(collection(db, "weeklyLogs"), {
-        uid: currentUser.uid,
-        timestamp: serverTimestamp(),
-        heartRate: data.heartRate,
-        spO2: data.spo2,
-        temperature: data.temperature
-      });
+      if (dashboardSnap.exists()) {
+        const data = dashboardSnap.data();
+        dashboardContent.innerHTML = `
+          <strong>Heart Rate:</strong> ${data.heartRate} bpm<br>
+          <strong>SpO₂:</strong> ${data.spO2}%<br>
+          <strong>Temperature:</strong> ${data.temperature} °C<br>
+          <strong>Limb Movement:</strong> ${data.limbMovement}<br>
+          <strong>Respiration Rate:</strong> ${data.respirationRate} bpm<br>
+          <strong>Stress Category:</strong> ${data.anxietyLevel}
+        `;
+      }
+    });
 
-      if (result.anxietyStatus === "Anxiety Detected") {
+    document.getElementById("sensorForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        heartRate: Number(document.getElementById("heartRate").value),
+        spo2: Number(document.getElementById("spo2").value),
+        temperature: Number(document.getElementById("temperature").value),
+        limbMovement: Number(document.getElementById("limbMovement").value),
+        respirationRate: Number(document.getElementById("respirationRate").value),
+        uid: currentUser?.uid || "test-user"
+      };
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        console.log("Prediction response:", result);
+
+        const predictionDiv = document.getElementById("predictionResult");
+        const tipsDiv = document.getElementById("anxietyTips");
+
+        predictionDiv.innerHTML = `
+          <strong>Predicted Stress Level:</strong> ${result.predictedStressLevel || "N/A"}<br>
+          <strong>Stress Category:</strong> ${result.anxietyLevel || "Unknown"}
+        `;
+
+        // Show tips based on anxiety level
         tipsDiv.style.display = "block";
         let tips = "";
-
-        switch (result.anxietyLevel) {
-          case "Low":
-            tips = `• Deep breathing<br>• Stretching<br>• Hydration<br>• Soft music`;
+        switch ((result.anxietyLevel || "").toLowerCase()) {
+          case "low":
+            tips = `
+              <strong>Tips for Low Stress:</strong><br>
+              • Maintain your healthy habits<br>
+              • Practice gratitude<br>
+              • Stay socially connected<br>
+              • Keep your sleep consistent
+            `;
             break;
-          case "Moderate":
-            tips = `• 5-min meditation<br>• Grounding technique<br>• Walk or call<br>• Journal`;
+          case "moderate":
+            tips = `
+              <strong>Tips for Moderate Stress:</strong><br>
+              • Take short breaks during work/study<br>
+              • Try deep breathing or meditation<br>
+              • Engage in physical activity<br>
+              • Avoid caffeine and alcohol
+            `;
             break;
-          case "High":
-            tips = `• Quiet space<br>• Calming app<br>• Breathing<br>• Contact help`;
+          case "high":
+            tips = `
+              <strong>Tips for High Stress:</strong><br>
+              • Seek professional guidance<br>
+              • Prioritize sleep and hydration<br>
+              • Practice mindfulness and journaling<br>
+              • Talk to someone you trust
+            `;
             break;
           default:
-            tips = `• Breathe<br>• Stay calm<br>• Be mindful`;
+            tips = "Unable to determine tips. Please try again.";
         }
-
         tipsDiv.innerHTML = tips;
-        notificationSuccessDiv.style.display = "block";
-        document.getElementById("sensorForm").style.display = "none";
 
-        setTimeout(() => {
-          notificationSuccessDiv.style.display = "none";
-          document.getElementById("sensorForm").style.display = "grid";
-        }, 5000);
-      } else {
-        tipsDiv.style.display = "none";
-        notificationSuccessDiv.style.display = "none";
-        document.getElementById("sensorForm").style.display = "grid";
+        await addDoc(collection(db, "weeklyLogs"), {
+          uid: currentUser.uid,
+          timestamp: serverTimestamp(),
+          heartRate: data.heartRate,
+          spO2: data.spo2,
+          temperature: data.temperature,
+          respirationRate: data.respirationRate,
+          stressLevel: result.predictedStressLevel,
+          stressCategory: result.anxietyLevel
+        });
+
+      } catch (err) {
+        console.error("Prediction error:", err);
+        const predictionDiv = document.getElementById("predictionResult");
+        predictionDiv.innerHTML = `<span style='color:red;'>Prediction failed. Try again.</span>`;
       }
-
-    } catch (err) {
-      console.error("Prediction error:", err);
-      const errorDiv = document.getElementById("predictionResult");
-      errorDiv.style.backgroundColor = "#ffebee";
-      errorDiv.style.borderColor = "#ef9a9a";
-      errorDiv.style.color = "#c62828";
-      errorDiv.textContent = `Prediction failed: ${err.message || 'An unknown error occurred. Please try again.'}`;
-      errorDiv.style.display = "block";
-
-      document.getElementById("sensorForm").style.display = "none";
-
-      setTimeout(() => {
-        errorDiv.style.display = "none";
-        errorDiv.style.backgroundColor = "#e3f2fd";
-        errorDiv.style.borderColor = "#90caf9";
-        errorDiv.style.color = "#0d47a1";
-        document.getElementById("sensorForm").style.display = "grid";
-      }, 7000);
-    }
-  });
-</script></body>
+    });
+  </script>
+</body>
 </html>

@@ -1,48 +1,47 @@
 import os
+import joblib
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from twilio.rest import Client
 
 app = Flask(__name__)
 CORS(app)
 
-# Automatically fetch credentials from environment
-TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-TWILIO_PHONE_NUMBER = '+1234567890'  # Your Twilio number
+# Load the trained model
+model = joblib.load('model.pkl')
 
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
-    heart_rate = data.get('heartRate')
-    stress_level = data.get('stressLevel')  # Changed variable name to stress_level
-    phone_number = data.get('phoneNumber')  # Provided by frontend
-
-    # Make sure heart_rate and stress_level are numbers (int or float)
     try:
-        heart_rate = float(heart_rate)
-        stress_level = float(stress_level)
+        heart_rate = float(data.get('heartRate'))
+        temperature = float(data.get('temperature'))
+        spo2 = float(data.get('spo2'))
+        limb_movement = float(data.get('limbMovement'))
+        respiration_rate = float(data.get('respirationRate'))
     except (TypeError, ValueError):
-        return jsonify({"error": "Invalid input for heartRate or stressLevel"}), 400
+        return jsonify({"error": "Invalid input"}), 400
 
-    if heart_rate > 100 or stress_level >= 7:
-        anxiety_status = "Anxiety Detected"
-        if stress_level >= 9:
-            anxiety_level = "High"
-        elif stress_level >= 7:
-            anxiety_level = "Moderate"
-        else:
-            anxiety_level = "Low"
-    else:
-        anxiety_status = "No Anxiety"
-        anxiety_level = "Low"
+    input_features = [[heart_rate, temperature, spo2, limb_movement, respiration_rate]]
 
-    result = {
-        "anxietyStatus": anxiety_status,
-        "anxietyLevel": anxiety_level
-    }
+    print("📥 Received data:", input_features)  # Debug log
 
-    return jsonify(result)
+    try:
+        predicted_stress = model.predict(input_features)[0]
+        print("📤 Predicted stress level:", predicted_stress)
+
+        anxiety_level = (
+            "High" if predicted_stress >= 9 else
+            "Moderate" if predicted_stress >= 7 else
+            "Low"
+        )
+
+        return jsonify({
+            "predictedStressLevel": round(predicted_stress, 2),
+            "anxietyLevel": anxiety_level
+        })
+
+    except Exception as e:
+        return jsonify({"error": f"Prediction error: {str(e)}"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
